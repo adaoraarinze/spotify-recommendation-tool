@@ -11,10 +11,10 @@ const spotifyApi = new SpotifyWebApi({
 const Dashboard = ({ code }) => {
   const accessToken = useAuth(code);
   const [info, setInfo] = useState();
-  var profile;
-  var topTracks = [5];
-  var recentlyPlayed = [5];
-
+  const [profileName, setProfileName] = useState("");
+  const [profileImg, setProfileImg] = useState("");
+  const [topTracks, setTopTracks] = useState([]);
+  const [recentlyPlayed, setRecentlyPlayed] = useState([])
 
   useEffect(() => {
     if (!accessToken) return;
@@ -22,67 +22,72 @@ const Dashboard = ({ code }) => {
     console.log('rendered');
   }, [accessToken]);
 
+  useEffect(() => {
+    if (!accessToken) return
+    (async () => {
+      const { body } = await spotifyApi.getMe();
+      console.log('personal info', body);
+      setProfileName(body.display_name);
+      setProfileImg(body.images[1].url);
+    })();
+  }, [accessToken])
 
-  async function getProfile() {
-  spotifyApi.getMe().then(
-    function(data) {
-      console.log('personal info', data.body);
-      profile = data.body.display_name
-    },
-    function(err) {
-      console.error(err);
-    }
-  );
-  }
 
-  async function getTopTracks() {
-  spotifyApi.getMyTopTracks({ limit: 5 }).then(
-    function(data) {
-      console.log('top tracks', data.body);
-      topTracks = data.body.items[0].name
-    },
-    function(err) {
-      console.error(err);
-    }
-  );
-  }
+  useEffect(() => {
+    if (!accessToken) return
+    (async () => {
+      const { body } = await spotifyApi.getMyTopTracks({ limit: 5 });
+      console.log('top tracks', body);
+      let array = []
+      body.items.forEach(function(items, index) {
+        array.push(
+          index +
+            1 +
+            '. ' +
+            items.name +
+            ' by ' + items.artists[0].name + " "
+        );
+      });
+      setTopTracks(array)
+    })();
+  }, [accessToken])
 
-  async function getRecentlyPlayed() {
-  spotifyApi.getMyRecentlyPlayedTracks({ limit: 5 }).then(
-    function(data) {
-      console.log('recently played', data.body);
-      recentlyPlayed = data.body.items[0].track.name
-    },
-    function(err) {
-      console.error(err);
-    }
-  );
-  }
+  useEffect(() => {
+    if (!accessToken) return
+    (async () => {
+      const { body } = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 5 });
+      console.log('recently played', body);
+      let array = []
+      body.items.forEach(function(track, index) {
+        array.push(
+          index +
+            1 +
+            '. ' +
+            track.track.name +
+            ' by ' + track.track.artists[0].name + " "
+        );
+      });
+      setRecentlyPlayed(array)
+    })();
+  }, [accessToken])
 
-  getProfile();
-  getTopTracks();
-  getRecentlyPlayed();
-
-  const clickProfile = () => setInfo(profile);
   const clickTopTracks = () => setInfo(topTracks);
   const clickRecentlyPlayed = () => setInfo(recentlyPlayed);
 
   return (
     <div className="App">
+      <header>
+        <p> hello {profileName} </p>
+        <img src={profileImg} alt="icon"></img>
+      </header>
       <header className="App-header">
-        <p>
-          logged in
-        </p>
-        <button onClick={clickProfile}>
-          profile
-        </button>
         <button onClick={clickTopTracks}>
           top tracks
         </button>
         <button onClick={clickRecentlyPlayed}>
           recently played
         </button>
-        <p>{info}</p>  
+        <p>{info}</p>
       </header>
     </div>
   );
