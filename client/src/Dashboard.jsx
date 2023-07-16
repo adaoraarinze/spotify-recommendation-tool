@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
-import "./styles/Dashboard.css"
+import "./styles/Dashboard.css";
 import Navbar from './Navbar';
 
 import useAuth from './hooks/useAuth';
@@ -17,7 +17,7 @@ const Dashboard = ({ code }) => {
   const [profileImg, setProfileImg] = useState("");
   const [topTracks, setTopTracks] = useState([]);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
-  const [list, showList] = useState(false)
+  const [list, showList] = useState(false);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -33,7 +33,7 @@ const Dashboard = ({ code }) => {
       setProfileName(body.display_name);
       setProfileImg(body.images[1].url);
     })();
-  }, [accessToken])
+  }, [accessToken]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -46,24 +46,24 @@ const Dashboard = ({ code }) => {
           index + 1 + '. ' + items.name + ' by ' + items.artists[0].name + " "
         );
       });
-      setTopTracks(array)
+      setTopTracks(array);
     })();
-  }, [accessToken])
+  }, [accessToken]);
 
   useEffect(() => {
-    if (!accessToken) return
+    if (!accessToken) return;
     (async () => {
       const { body } = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 5 });
       console.log('recently played', body);
-      let array = []
+      let array = [];
       body.items.forEach(function (track, index) {
         array.push(
           index + 1 + '. ' + track.track.name + ' by ' + track.track.artists[0].name + " "
         );
       });
-      setRecentlyPlayed(array)
+      setRecentlyPlayed(array);
     })();
-  }, [accessToken])
+  }, [accessToken]);
 
   const clickTopTracks = () => {
     setInfo(topTracks);

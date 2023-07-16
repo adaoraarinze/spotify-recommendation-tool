@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import './styles/Navbar.css';
 
 const Navbar= ({ code }) => {
@@ -15,6 +15,6 @@ const Navbar= ({ code }) => {
             </div>
         </>
     );
-}
+};
 
-export default Navbar
+export default Navbar;

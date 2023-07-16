@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from "./Navbar";
-import "./styles/Login.css"
+import "./styles/Login.css";
 
 const scopes = [
   "user-read-recently-played",
@@ -39,6 +39,6 @@ function Login() {
       </div>
     </>
   );
-}
+};
 
 export default Login;
