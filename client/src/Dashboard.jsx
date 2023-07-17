@@ -18,6 +18,8 @@ const Dashboard = ({ code }) => {
   const [topTracks, setTopTracks] = useState([]);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
   const [list, showList] = useState(false);
+  const [trackIds, setTrackIds] = useState("");
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -40,12 +42,16 @@ const Dashboard = ({ code }) => {
     (async () => {
       const { body } = await spotifyApi.getMyTopTracks({ limit: 5 });
       console.log('top tracks', body);
+      let ids = "";
       let array = [];
       body.items.forEach(function (items, index) {
         array.push(
           index + 1 + '. ' + items.name + ' by ' + items.artists[0].name + " "
         );
+        ids += items.id +",";
       });
+      ids = ids.slice(0, -1);
+      setTrackIds(ids);
       setTopTracks(array);
     })();
   }, [accessToken]);
@@ -65,6 +71,22 @@ const Dashboard = ({ code }) => {
     })();
   }, [accessToken]);
 
+  useEffect(() => {
+    if (!accessToken) return;
+    if (!trackIds) return setTrackIds("");
+    (async () => {
+      const { body } = await spotifyApi.getRecommendations({ seed_tracks: trackIds });
+      console.log('recommendations', body);
+      let array = [];
+      body.tracks.forEach(function (tracks, index) {
+        array.push(
+          index + 1 + '. ' + tracks.name + ' by ' + tracks.artists[0].name + " "
+        );
+      });
+      setRecommendations(array);
+    })();
+  }, [accessToken, trackIds]);
+
   const clickTopTracks = () => {
     setInfo(topTracks);
     showList(true);
@@ -72,6 +94,11 @@ const Dashboard = ({ code }) => {
 
   const clickRecentlyPlayed = () => {
     setInfo(recentlyPlayed);
+    showList(true);
+  }
+
+  const clickRecommendations = () => {
+    setInfo(recommendations);
     showList(true);
   }
 
@@ -96,6 +123,9 @@ const Dashboard = ({ code }) => {
             </button>
             <button class="button" onClick={clickRecentlyPlayed} >
               recently played
+            </button>
+            <button class="button" onClick={clickRecommendations} >
+              recommendations based on top tracks
             </button>
           </div>
           <div className='list'>
