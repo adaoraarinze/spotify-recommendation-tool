@@ -9,7 +9,7 @@
     width: 50vh;
     border-radius: 10px;
     text-align: center;
-    margin-right: 20px;
+    margin-left: 20vh;
 }
 
 img {
@@ -28,7 +28,7 @@ img {
 
 .data {
     text-align: center;
-    width: 50vh;
+    width: 100%;
     margin-left: 40px;
 }
 
