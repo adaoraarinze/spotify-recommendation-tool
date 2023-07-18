@@ -18,9 +18,13 @@ const Dashboard = ({ code }) => {
   const [profileImg, setProfileImg] = useState("");
   const [topTracks, setTopTracks] = useState([]);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [topTracksImages, setTopTracksImages] = useState([]);
+  const [recentlyPlayedImages, setRecentlyPlayedImages] = useState([]);
+  const [recommendationsImages, setRecommendationsImages] = useState([]);
+  const [albumImages, setAlbumImages] = useState([]);
   const [list, showList] = useState(false);
   const [trackIds, setTrackIds] = useState("");
-  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -45,15 +49,20 @@ const Dashboard = ({ code }) => {
       console.log('top tracks', body);
       let ids = "";
       let array = [];
+      let imageArray = [];
       body.items.forEach(function (items, index) {
         array.push(
           index + 1 + '. ' + items.name + ' by ' + items.artists[0].name + " "
         );
         ids += items.id +",";
+        imageArray.push(
+          items.album.images[2].url
+        );
       });
       ids = ids.slice(0, -1);
       setTrackIds(ids);
       setTopTracks(array);
+      setTopTracksImages(imageArray);
     })();
   }, [accessToken]);
 
@@ -63,12 +72,17 @@ const Dashboard = ({ code }) => {
       const { body } = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 5 });
       console.log('recently played', body);
       let array = [];
+      let imageArray = [];
       body.items.forEach(function (track, index) {
         array.push(
           index + 1 + '. ' + track.track.name + ' by ' + track.track.artists[0].name + " "
         );
+        imageArray.push(
+          track.track.album.images[2].url
+        );
       });
       setRecentlyPlayed(array);
+      setRecentlyPlayedImages(imageArray);
     })();
   }, [accessToken]);
 
@@ -79,27 +93,35 @@ const Dashboard = ({ code }) => {
       const { body } = await spotifyApi.getRecommendations({ seed_tracks: trackIds });
       console.log('recommendations', body);
       let array = [];
+      let imageArray = [];
       body.tracks.forEach(function (tracks, index) {
         array.push(
           index + 1 + '. ' + tracks.name + ' by ' + tracks.artists[0].name + " "
         );
+        imageArray.push(
+          tracks.album.images[2].url
+        );
       });
       setRecommendations(array);
+      setRecommendationsImages(imageArray);
     })();
   }, [accessToken, trackIds]);
 
   const clickTopTracks = () => {
     setInfo(topTracks);
+    setAlbumImages(topTracksImages);
     showList(true);
   }
 
   const clickRecentlyPlayed = () => {
     setInfo(recentlyPlayed);
+    setAlbumImages(recentlyPlayedImages);
     showList(true);
   }
 
   const clickRecommendations = () => {
     setInfo(recommendations);
+    setAlbumImages(recommendationsImages);
     showList(true);
   }
 
@@ -113,8 +135,8 @@ const Dashboard = ({ code }) => {
           <div className='name'>
             <text> hello, {profileName} </text>
           </div>
-          <div className='img'>
-            <img src={profileImg || blankProfile} alt="icon"></img>
+          <div>
+            <img className='profile-img' src={profileImg || blankProfile} alt="icon"></img>
           </div>
         </div>
         <div className='data'>
@@ -131,7 +153,13 @@ const Dashboard = ({ code }) => {
           </div>
           <div className='list'>
             {list &&
-              <><li>{info[0]}</li><li>{info[1]}</li><li>{info[2]}</li><li>{info[3]}</li><li>{info[4]}</li></>
+            <>
+              <div class="list-items"><p><img src={albumImages[0]} alt=""></img> {info[0]}</p></div>
+              <div class="list-items"><p><img src={albumImages[1]} alt=""></img> {info[1]}</p></div>
+              <div class="list-items"><p><img src={albumImages[2]} alt=""></img> {info[2]}</p></div>
+              <div class="list-items"><p><img src={albumImages[3]} alt=""></img> {info[3]}</p></div>
+              <div class="list-items"><p><img src={albumImages[4]} alt=""></img> {info[4]}</p></div>
+              </>
             }
           </div>
         </div>
