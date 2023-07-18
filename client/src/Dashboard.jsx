@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import "./styles/Dashboard.css";
 import Navbar from './Navbar';
+import blankProfile from "./assets/blank.png"
 
 import useAuth from './hooks/useAuth';
 import SpotifyWebApi from 'spotify-web-api-node';
@@ -113,7 +114,7 @@ const Dashboard = ({ code }) => {
             <text> hello, {profileName} </text>
           </div>
           <div className='img'>
-            <img src={profileImg} alt="icon"></img>
+            <img src={profileImg || blankProfile} alt="icon"></img>
           </div>
         </div>
         <div className='data'>
