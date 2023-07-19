@@ -9,7 +9,7 @@
     width: 50vh;
     border-radius: 10px;
     text-align: center;
-    margin-left: 20vh;
+    margin-left: 10vh;
 }
 
 .profile-img {
@@ -31,7 +31,7 @@
 .data {
     text-align: center;
     width: 100%;
-    margin-left: 40px;
+    margin-left: 20px;
 }
 
 .btn-group .button {
@@ -62,13 +62,13 @@
 .list p {
     padding: 5px;
     display: flex;
-    line-height: 64px;
+    line-height: 32px;
 }
 
 .list p a {
     text-decoration: none;
-    font-size: 12px;
-    font-weight: lighter;
+    font-size: 11px;
+    font-weight: normal;
     font-style: italic;
     font-family: Arial, Helvetica, sans-serif;
     color: black;
@@ -80,4 +80,6 @@
 
 .list p img {
     margin-right: 5px;
+    width: 32px;
+    height: 32px;
 }

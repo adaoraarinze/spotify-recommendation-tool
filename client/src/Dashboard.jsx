@@ -33,7 +33,6 @@ const Dashboard = ({ code }) => {
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
-    console.log('rendered');
   }, [accessToken]);
 
   useEffect(() => {
@@ -52,20 +51,25 @@ const Dashboard = ({ code }) => {
       const { body } = await spotifyApi.getMyTopTracks({ limit: 5 });
       console.log('top tracks', body);
       let ids = "";
-      let array = [];
-      let imageArray = [];
-      let linkArray = [];
+      let [array, imageArray, linkArray] = [[], [], []];
       body.items.forEach(function (items, index) {
-        array.push(
-          index + 1 + '. ' + items.name + ' by ' + items.artists[0].name + " "
+        let [tempArray, artistNames] = [[], []];
+        items.artists.forEach(function(artists, index){
+            artistNames.push(artists.name)
+        });
+        artistNames = artistNames.join(", ")
+        tempArray.push(
+          index + 1 + '. ' + items.name + ' by '
         );
-        ids += items.id +",";
         imageArray.push(
           items.album.images[2].url
         );
         linkArray.push(
           items.external_urls.spotify
         );
+        tempArray = tempArray.concat(artistNames);
+        array.push(tempArray);
+        ids += items.id +",";
       });
       ids = ids.slice(0, -1);
       setTrackIds(ids);
@@ -80,12 +84,15 @@ const Dashboard = ({ code }) => {
     (async () => {
       const { body } = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 5 });
       console.log('recently played', body);
-      let array = [];
-      let imageArray = [];
-      let linkArray = [];
+      let [array, imageArray, linkArray] = [[], [], []];
       body.items.forEach(function (track, index) {
-        array.push(
-          index + 1 + '. ' + track.track.name + ' by ' + track.track.artists[0].name + " "
+        let [tempArray, artistNames] = [[], []];
+        track.track.artists.forEach(function(artists, index){
+            artistNames.push(artists.name)
+        });
+        artistNames = artistNames.join(", ")
+        tempArray.push(
+          index + 1 + '. ' + track.track.name + ' by '
         );
         imageArray.push(
           track.track.album.images[2].url
@@ -93,6 +100,8 @@ const Dashboard = ({ code }) => {
         linkArray.push(
           track.track.external_urls.spotify
         );
+        tempArray = tempArray.concat(artistNames);
+        array.push(tempArray);
       });
       setRecentlyPlayed(array);
       setRecentlyPlayedImages(imageArray);
@@ -106,12 +115,15 @@ const Dashboard = ({ code }) => {
     (async () => {
       const { body } = await spotifyApi.getRecommendations({ seed_tracks: trackIds });
       console.log('recommendations', body);
-      let array = [];
-      let imageArray = [];
-      let linkArray = [];
+      let [array, imageArray, linkArray] = [[], [], []];
       body.tracks.forEach(function (tracks, index) {
-        array.push(
-          index + 1 + '. ' + tracks.name + ' by ' + tracks.artists[0].name + " "
+        let [tempArray, artistNames] = [[], []];
+        tracks.artists.forEach(function(artists, index){
+            artistNames.push(artists.name)
+        });
+        artistNames = artistNames.join(", ")
+        tempArray.push(
+          index + 1 + '. ' + tracks.name + ' by '
         );
         imageArray.push(
           tracks.album.images[2].url
@@ -119,6 +131,8 @@ const Dashboard = ({ code }) => {
         linkArray.push(
           tracks.external_urls.spotify
         );
+        tempArray = tempArray.concat(artistNames);
+        array.push(tempArray);
       });
       setRecommendations(array);
       setRecommendationsImages(imageArray);
@@ -181,6 +195,7 @@ const Dashboard = ({ code }) => {
               <div class="list-items"><p><img src={albumImages[2]} alt=""></img> <a href={links[2]} target='_blank' rel='noreferrer'>{info[2]}</a></p></div>
               <div class="list-items"><p><img src={albumImages[3]} alt=""></img> <a href={links[3]} target='_blank' rel='noreferrer'>{info[3]}</a></p></div>
               <div class="list-items"><p><img src={albumImages[4]} alt=""></img> <a href={links[4]} target='_blank' rel='noreferrer'>{info[4]}</a></p></div>
+
               </>
             }
           </div>
