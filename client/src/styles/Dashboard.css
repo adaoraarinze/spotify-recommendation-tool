@@ -57,16 +57,25 @@
 
 .list {
     margin-top: 10px;
-    font-size: 10px;
-    font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
-    color: black;
 }
 
 .list p {
     padding: 5px;
     display: flex;
     line-height: 64px;
+}
+
+.list p a {
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: lighter;
+    font-style: italic;
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+}
+
+.list p a:hover {
+    color: #feafd4;
 }
 
 .list p img {

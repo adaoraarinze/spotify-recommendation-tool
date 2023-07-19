@@ -23,6 +23,10 @@ const Dashboard = ({ code }) => {
   const [recentlyPlayedImages, setRecentlyPlayedImages] = useState([]);
   const [recommendationsImages, setRecommendationsImages] = useState([]);
   const [albumImages, setAlbumImages] = useState([]);
+  const [topTracksLinks, setTopTracksLinks] = useState([]);
+  const [recentlyPlayedLinks, setRecentlyPlayedLinks] = useState([]);
+  const [recommendationsLinks, setRecommendationsLinks] = useState([]);
+  const [links, setLinks] = useState([]);
   const [list, showList] = useState(false);
   const [trackIds, setTrackIds] = useState("");
 
@@ -50,6 +54,7 @@ const Dashboard = ({ code }) => {
       let ids = "";
       let array = [];
       let imageArray = [];
+      let linkArray = [];
       body.items.forEach(function (items, index) {
         array.push(
           index + 1 + '. ' + items.name + ' by ' + items.artists[0].name + " "
@@ -58,11 +63,15 @@ const Dashboard = ({ code }) => {
         imageArray.push(
           items.album.images[2].url
         );
+        linkArray.push(
+          items.external_urls.spotify
+        );
       });
       ids = ids.slice(0, -1);
       setTrackIds(ids);
       setTopTracks(array);
       setTopTracksImages(imageArray);
+      setTopTracksLinks(linkArray);
     })();
   }, [accessToken]);
 
@@ -73,6 +82,7 @@ const Dashboard = ({ code }) => {
       console.log('recently played', body);
       let array = [];
       let imageArray = [];
+      let linkArray = [];
       body.items.forEach(function (track, index) {
         array.push(
           index + 1 + '. ' + track.track.name + ' by ' + track.track.artists[0].name + " "
@@ -80,9 +90,13 @@ const Dashboard = ({ code }) => {
         imageArray.push(
           track.track.album.images[2].url
         );
+        linkArray.push(
+          track.track.external_urls.spotify
+        );
       });
       setRecentlyPlayed(array);
       setRecentlyPlayedImages(imageArray);
+      setRecentlyPlayedLinks(linkArray);
     })();
   }, [accessToken]);
 
@@ -94,6 +108,7 @@ const Dashboard = ({ code }) => {
       console.log('recommendations', body);
       let array = [];
       let imageArray = [];
+      let linkArray = [];
       body.tracks.forEach(function (tracks, index) {
         array.push(
           index + 1 + '. ' + tracks.name + ' by ' + tracks.artists[0].name + " "
@@ -101,27 +116,34 @@ const Dashboard = ({ code }) => {
         imageArray.push(
           tracks.album.images[2].url
         );
+        linkArray.push(
+          tracks.external_urls.spotify
+        );
       });
       setRecommendations(array);
       setRecommendationsImages(imageArray);
+      setRecommendationsLinks(linkArray);
     })();
   }, [accessToken, trackIds]);
 
   const clickTopTracks = () => {
     setInfo(topTracks);
     setAlbumImages(topTracksImages);
+    setLinks(topTracksLinks);
     showList(true);
   }
 
   const clickRecentlyPlayed = () => {
     setInfo(recentlyPlayed);
     setAlbumImages(recentlyPlayedImages);
+    setLinks(recentlyPlayedLinks);
     showList(true);
   }
 
   const clickRecommendations = () => {
     setInfo(recommendations);
     setAlbumImages(recommendationsImages);
+    setLinks(recommendationsLinks);
     showList(true);
   }
 
@@ -154,11 +176,11 @@ const Dashboard = ({ code }) => {
           <div className='list'>
             {list &&
             <>
-              <div class="list-items"><p><img src={albumImages[0]} alt=""></img> {info[0]}</p></div>
-              <div class="list-items"><p><img src={albumImages[1]} alt=""></img> {info[1]}</p></div>
-              <div class="list-items"><p><img src={albumImages[2]} alt=""></img> {info[2]}</p></div>
-              <div class="list-items"><p><img src={albumImages[3]} alt=""></img> {info[3]}</p></div>
-              <div class="list-items"><p><img src={albumImages[4]} alt=""></img> {info[4]}</p></div>
+              <div class="list-items"><p><img src={albumImages[0]} alt=""></img> <a href={links[0]} target='_blank' rel='noreferrer'>{info[0]}</a></p></div>
+              <div class="list-items"><p><img src={albumImages[1]} alt=""></img> <a href={links[1]} target='_blank' rel='noreferrer'>{info[1]}</a></p></div>
+              <div class="list-items"><p><img src={albumImages[2]} alt=""></img> <a href={links[2]} target='_blank' rel='noreferrer'>{info[2]}</a></p></div>
+              <div class="list-items"><p><img src={albumImages[3]} alt=""></img> <a href={links[3]} target='_blank' rel='noreferrer'>{info[3]}</a></p></div>
+              <div class="list-items"><p><img src={albumImages[4]} alt=""></img> <a href={links[4]} target='_blank' rel='noreferrer'>{info[4]}</a></p></div>
               </>
             }
           </div>
