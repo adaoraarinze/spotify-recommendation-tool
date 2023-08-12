@@ -40,7 +40,9 @@ const Dashboard = ({ code }) => {
     (async () => {
       const { body } = await spotifyApi.getMe();
       setProfileName(body.display_name);
-      setProfileImg(body.images[1].url);
+      if(body.images[1]) {
+        setProfileImg(body.images[1].url);
+      }
     })();
   }, [accessToken]);
 
